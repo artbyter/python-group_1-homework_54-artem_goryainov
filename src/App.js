@@ -37,7 +37,6 @@ class App extends Component {
     };
 
     textChange = (event) => {
-        const name = event.target.name;
         let value = event.target.value;
         this.setState({current_task: value})
 
@@ -51,7 +50,7 @@ class App extends Component {
         task.id = this.next_id;
         this.next_id++;
         task.isFinished = false;
-        let tasks = [...this.state.tasks, task];
+        let tasks = [task, ...this.state.tasks];
         this.setState({
             ...this.state,
             tasks,
@@ -59,7 +58,7 @@ class App extends Component {
         });
 
     };
-
+    
     deleteTask = (id) => {
 
         let taskId = this.state.tasks.findIndex(task => {
@@ -79,14 +78,16 @@ class App extends Component {
 
         return (
             <div className="App">
-                < AddTaskForm onChange={this.textChange} onClick={this.submitTask}/>
+                < AddTaskForm onChange={this.textChange} onClick={this.submitTask} text={this.state.current_task}/>
                 {this.state.tasks.map((task) => {
                     return (<TaskItem key={task.id}
                                       text={task.text}
                                       trash={trash}
                                       checkboxChange={(event) => this.checkboxChange(event, task.id)}
-                                      deleteTask={()=>this.deleteTask(task.id)}
-                                      isFinished={task.isFinished ? 'checked' : ''}/>)
+                                      deleteTask={() => this.deleteTask(task.id)}
+                                      isFinished={task.isFinished ? 'checked' : ''}
+                                      status={task.isFinished ? 'Задача завершена' : 'В процессе'}
+                                      badgeColor={task.isFinished ? 'badge-dark' : 'badge-primary'}/>)
                 })}
 
             </div>
